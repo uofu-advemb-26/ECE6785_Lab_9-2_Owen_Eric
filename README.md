@@ -42,5 +42,11 @@
 | 18     | The arms and alarms move instantly                        |
 | 19     | Only one input happens at a time                          |
 
+## Specification vs.implementation
+
+
+
+
+
 
 
