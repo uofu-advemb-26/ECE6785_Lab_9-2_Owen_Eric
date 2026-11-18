@@ -1,7 +1,6 @@
 # Lab 9
 
-!(example.pdf)[Train crossing state diagram]
-![Train Crossing State Diagram](example.pdf)
+![Train Crossing State Diagram](example.png)
 
 ## Invariants
 - There is power.
