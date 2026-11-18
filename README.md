@@ -45,10 +45,11 @@
 | 17     | A train must depart before the next enters the same track |
 | 18     | A train must exist to depart                              |
 
-## Model Checking
-
 ## Specification vs.implementation
 
+
+## Model Checking
+The created table follows our state diagrams for all of the valid states, but adds the unreachable states and shows all of the invalid inputs. We were relatively lenient on erroneous inputs that we deemed as safe, such as the timer randomly going off when it wasn't set. 
 
 
 
