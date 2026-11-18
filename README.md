@@ -15,6 +15,10 @@
 
 ## Check your work
 
+### Owen's Train Crossing Diagram
+![Owen's train diagram](owen_train_diagram.png)
+
+
 ## Prove It
 
 | number | arms_down | alarm_on | northbound_present | southbound_present | north_approach | south_approach | north_depart | south_depart | ringing | safety_hazard |
