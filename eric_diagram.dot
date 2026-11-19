@@ -1,0 +1,19 @@
+digraph G {
+	rankdir=LR;
+	nodesep=0.9;
+	ranksep=1.0;
+	node [shape=box, style=rounded];
+	
+	IDLE -> NORTH_ALARM [label="north_approach"];
+	NORTH_ALARM -> NORTH_CROSSING [label="north_approach\n& timer"];
+	NORTH_CROSSING -> NORTH_ALARM [label="north_depart"];
+	NORTH_ALARM -> IDLE [label="timer\n& !north_depart\n& !south_depart"];
+	NORTH_ALARM -> SOUTH_ALARM [xlabel="south_depart", constraint=false];
+
+	IDLE -> SOUTH_ALARM [label="south_approach"];
+	SOUTH_ALARM -> SOUTH_CROSSING [label="south_approach\n& timer"];
+	SOUTH_CROSSING -> SOUTH_ALARM [label="south_depart"];
+	SOUTH_ALARM -> IDLE [label="timer\n& !south_depart\n& !north_depart"];
+	SOUTH_ALARM -> NORTH_ALARM [xlabel="north_depart", constraint=false];
+	
+}

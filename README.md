@@ -17,6 +17,8 @@
 ### Owen's Train Crossing Diagram
 ![Owen's train diagram](owen_train_diagram.png)
 
+### Eric's Train Crossing Diagram
+![Eric's Train Diagram](eric_diagram.dot.png)
 
 ## Prove It
 
