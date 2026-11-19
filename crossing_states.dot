@@ -1,0 +1,84 @@
+// Railroad crossing state machine, generated from the state table.
+// Box color = safety_hazard: green 0, yellow 1, red 2.
+// Inputs that go from the same state to the same state share one arrow.
+// An arrow that starts at a dashed group box applies to EVERY state in that box
+// (arrows and labels use the same color as their group box).
+digraph crossing {
+    rankdir=LR;
+    compound=true;   // lets an arrow start at a group's border (ltail)
+    nodesep=0.4;
+    ranksep=1.3;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=9];
+
+    // ---- Normal operation: the states reachable from 0 ----
+    S0 [label="0\narms_down=0  alarm_on=0\nnorthbound=0  southbound=0\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+    S13 [label="13\narms_down=1  alarm_on=1\nnorthbound=0  southbound=1\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+    S14 [label="14\narms_down=1  alarm_on=1\nnorthbound=1  southbound=0\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+    S15 [label="15\narms_down=1  alarm_on=1\nnorthbound=1  southbound=1\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+
+    S0 -> S14 [label="north_approach"];
+    S0 -> S13 [label="south_approach"];
+    S0 -> S0 [label="north_depart\nsouth_depart"];
+    S13 -> S15 [label="north_approach"];
+    S13 -> S13 [label="south_approach\nnorth_depart"];
+    S13 -> S0 [label="south_depart", constraint=false];
+    S14 -> S14 [label="north_approach\nsouth_depart"];
+    S14 -> S15 [label="south_approach"];
+    S14 -> S0 [label="north_depart", constraint=false];
+    S15 -> S15 [label="north_approach\nsouth_approach"];
+    S15 -> S13 [label="north_depart", constraint=false];
+    S15 -> S14 [label="south_depart", constraint=false];
+
+    // ---- Other states, grouped by which trains are present ----
+    // Every state in a group has the same transitions, so each group's
+    // arrows are drawn once, from the group box (ltail=...).
+    subgraph cluster_south {
+        label="northbound=0, southbound=1"; fontname="Helvetica"; fontsize=10; fontcolor="#1565c0";
+        style="rounded,dashed"; color="#1565c0";
+        S1 [label="1\narms_down=0  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+        S5 [label="5\narms_down=0  alarm_on=1\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+        S9 [label="9\narms_down=1  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+    }
+    subgraph cluster_none {
+        label="northbound=0, southbound=0"; fontname="Helvetica"; fontsize=10; fontcolor="#6a1b9a";
+        style="rounded,dashed"; color="#6a1b9a";
+        S4 [label="4\narms_down=0  alarm_on=1\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+        S8 [label="8\narms_down=1  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+        S12 [label="12\narms_down=1  alarm_on=1\nsafety_hazard=0", fillcolor="#e6f4ea", color="#2e7d32"];
+    }
+    subgraph cluster_north {
+        label="northbound=1, southbound=0"; fontname="Helvetica"; fontsize=10; fontcolor="#00838f";
+        style="rounded,dashed"; color="#00838f";
+        S2 [label="2\narms_down=0  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+        S6 [label="6\narms_down=0  alarm_on=1\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+        S10 [label="10\narms_down=1  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+    }
+    subgraph cluster_both {
+        label="northbound=1, southbound=1"; fontname="Helvetica"; fontsize=10; fontcolor="#ad1457";
+        style="rounded,dashed"; color="#ad1457";
+        S3 [label="3\narms_down=0  alarm_on=0\nsafety_hazard=2", fillcolor="#fde2e1", color="#c62828"];
+        S7 [label="7\narms_down=0  alarm_on=1\nsafety_hazard=2", fillcolor="#fde2e1", color="#c62828"];
+        S11 [label="11\narms_down=1  alarm_on=0\nsafety_hazard=1", fillcolor="#fff4d6", color="#b26a00"];
+    }
+
+    // from every state in cluster_south
+    S5 -> S15 [label="north_approach", ltail=cluster_south, color="#1565c0", fontcolor="#1565c0"];
+    S5 -> S13 [label="south_approach\nnorth_depart", ltail=cluster_south, color="#1565c0", fontcolor="#1565c0"];
+    S5 -> S0 [label="south_depart", ltail=cluster_south, color="#1565c0", fontcolor="#1565c0"];
+    // from every state in cluster_none
+    S8 -> S14 [label="north_approach", ltail=cluster_none, color="#6a1b9a", fontcolor="#6a1b9a"];
+    S8 -> S13 [label="south_approach", ltail=cluster_none, color="#6a1b9a", fontcolor="#6a1b9a"];
+    S8 -> S0 [label="north_depart\nsouth_depart", ltail=cluster_none, color="#6a1b9a", fontcolor="#6a1b9a"];
+    // from every state in cluster_north
+    S6 -> S14 [label="north_approach\nsouth_depart", ltail=cluster_north, color="#00838f", fontcolor="#00838f"];
+    S6 -> S15 [label="south_approach", ltail=cluster_north, color="#00838f", fontcolor="#00838f"];
+    S6 -> S0 [label="north_depart", ltail=cluster_north, color="#00838f", fontcolor="#00838f"];
+    // from every state in cluster_both
+    S7 -> S15 [label="north_approach\nsouth_approach", ltail=cluster_both, color="#ad1457", fontcolor="#ad1457"];
+    S7 -> S13 [label="north_depart", ltail=cluster_both, color="#ad1457", fontcolor="#ad1457"];
+    S7 -> S14 [label="south_depart", ltail=cluster_both, color="#ad1457", fontcolor="#ad1457"];
+
+    labelloc=b; labeljust=l; fontname="Helvetica"; fontsize=10;
+    label="\nInvariants:\l16. A train must depart before the next enters the same track\l17. There is power\l18. The arms and alarms move instantly\l19. Only one input happens at a time\l";
+}
