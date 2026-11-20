@@ -1,0 +1,48 @@
+// Railroad crossing FSM, built from the state table (rows 0-15, invariants 16-19).
+//
+// States: rows that differ only in arms_down / alarm_on are merged into one
+// FSM state. By invariant 18 (arms and alarms move instantly), those rows
+// last zero time, so the only thing that defines a state is which trains
+// are present. Every row in a merged state has the same transitions in the table.
+//
+// Events left off, because they cannot happen:
+//   - north_approach while a northbound train is present  (invariant 16)
+//   - south_approach while a southbound train is present  (invariant 16)
+//   - north_depart / south_depart when no train is on that track
+//     (no train to depart; in the table these never change the state anyway)
+// Each arrow is exactly one input (invariant 19).
+
+digraph crossing_fsm {
+    rankdir=LR;
+    nodesep=0.9;
+    ranksep=1.4;
+    node [shape=box, style=rounded, fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=10];
+
+    // Initial state
+    start [shape=point, width=0.15, label=""];
+    start -> NO_TRAINS;
+
+    NO_TRAINS  [label=<<B>0, 4, 8, 12</B><BR/><FONT POINT-SIZE="9">northbound=0  southbound=0<BR/>arms_down=0  alarm_on=0</FONT>>];
+    SOUTH_ONLY [label=<<B>1, 5, 9, 13</B><BR/><FONT POINT-SIZE="9">northbound=0  southbound=1<BR/>arms_down=1  alarm_on=1</FONT>>];
+    NORTH_ONLY [label=<<B>2, 6, 10, 14</B><BR/><FONT POINT-SIZE="9">northbound=1  southbound=0<BR/>arms_down=1  alarm_on=1</FONT>>];
+    BOTH       [label=<<B>3, 7, 11, 15</B><BR/><FONT POINT-SIZE="9">northbound=1  southbound=1<BR/>arms_down=1  alarm_on=1</FONT>>];
+
+    // Keep the one-train states in the same column, so the layout is a diamond
+    { rank=same; SOUTH_ONLY; NORTH_ONLY; }
+
+    // Trains arriving
+    NO_TRAINS  -> SOUTH_ONLY [label="south_approach"];
+    NO_TRAINS  -> NORTH_ONLY [label="north_approach"];
+    SOUTH_ONLY -> BOTH       [label="north_approach"];
+    NORTH_ONLY -> BOTH       [label="south_approach"];
+
+    // Trains leaving
+    SOUTH_ONLY -> NO_TRAINS  [label="south_depart"];
+    NORTH_ONLY -> NO_TRAINS  [label="north_depart"];
+    BOTH       -> SOUTH_ONLY [label="north_depart"];
+    BOTH       -> NORTH_ONLY [label="south_depart"];
+
+    labelloc=b; labeljust=l; fontname="Helvetica"; fontsize=10;
+    label="\nInvariants:\l16. A train must depart before the next enters the same track\l17. There is power\l18. The arms and alarms move instantly\l19. Only one input happens at a time\l";
+}

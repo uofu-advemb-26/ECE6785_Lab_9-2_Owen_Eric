@@ -1,4 +1,4 @@
-# Lab 9
+ # Lab 9
 
 ![Train Crossing State Diagram](example.png)
 
@@ -53,9 +53,8 @@
 ## Model Checking
 The created table follows our state diagrams for all of the valid states, but adds the unreachable states and shows all of the invalid inputs. We were relatively lenient on erroneous inputs that we deemed as safe, such as the timer randomly going off when it wasn't set. 
 
-![Crossing Diagram](crossing_states.dot.png)
+![Crossing Diagram](crossing_fsm.png)
 
+The new FMS is similar to our original graphs but does have some differences. In our original graphs, we didn't have combined states in mind, so this new graph gives us a more explicit, exhaustive idea of how the state machine would work. 
 
-
-
-
+It is easy to see how a state machine can grow extremely complex with relatively few added states. It essentially grows at a rate of 2<sup>n</sup> where n is the number of states. This can make it nearly impossible to test each case with even a mildly complex system. 
