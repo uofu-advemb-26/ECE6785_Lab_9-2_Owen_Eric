@@ -8,7 +8,6 @@
 - The motor for the arms works.
 - Only one input can happen at a time
 
-
 ## Varying invariants
  -  If there are two trains on the track, such that one train leaves triggering arms up while the other train remains on the tracks the system will be in an unsafe state.
 
